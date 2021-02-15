@@ -1,0 +1,70 @@
+
+# Created by https://www.toptal.com/developers/gitignore/api/zig,c,assembler
+# Edit at https://www.toptal.com/developers/gitignore?templates=zig,c,assembler
+
+### Assembler ###
+*.exe
+*.o
+*.obj
+*.bc
+
+### C ###
+# Prerequisites
+*.d
+
+# Object files
+*.ko
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+### zig ###
+# Zig programming language
+
+zig-cache/
+build/
+build-*/
+docgen_tmp/
+
+# End of https://www.toptal.com/developers/gitignore/api/zig,c,assembler
