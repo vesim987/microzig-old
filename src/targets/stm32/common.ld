@@ -1,4 +1,4 @@
-ENTRY(ResetHandler)
+ENTRY(resetHandler)
 
 PROVIDE(__stack_top = ALIGN(ORIGIN(RAM) + LENGTH(RAM) - 8 ,8));
 

@@ -10,6 +10,7 @@ pub fn MMIO(comptime addr: usize, comptime IntT: type, comptime PackedT: type) t
             const intValue = ptr().*;
             return @bitCast(PackedT, intValue);
         }
+
         pub fn write(val: PackedT) void {
             const intValue = @bitCast(IntT, val);
             ptr().* = intValue;
@@ -21,10 +22,11 @@ pub fn MMIO(comptime addr: usize, comptime IntT: type, comptime PackedT: type) t
             }
             write(val);
         }
+        pub const get = read;
         pub fn toggle(fields: anytype) void {
             var val = read();
             inline for (@typeInfo(@TypeOf(fields)).Struct.fields) |field| {
-                @field(val, @tagName(field.default_value.?)) = !@field(val, @tagName(field.default_value.?));
+                @field(val, field.name) = !@field(val, field.name);
             }
             write(val);
         }

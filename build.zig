@@ -18,6 +18,7 @@ fn find_board(name: []const u8) ?[]u8 {
 
         return std.mem.dupe(std.heap.page_allocator, u8, entry.path) catch @panic("failed to allocate");
     }
+
     return null;
 }
 
@@ -31,15 +32,13 @@ pub fn build(b: *Builder) void {
         .abi = .none,
     };
 
-    const runtime = b.addObject("runtime.so", "src/targets/stm32/startup.zig");
-    runtime.setTarget(target);
-
     const exe = b.addExecutable("firmware.elf", "src/main.zig");
     exe.setTarget(target);
 
     exe.setBuildMode(std.builtin.Mode.ReleaseSmall);
+
+    // TODO: dynamically generate linker script from SoC metadata
     exe.setLinkerScriptPath("src/targets/stm32/stm32f411/stm32f411.ld");
-    exe.addObject(runtime);
 
     const board = b.option([]const u8, "board", "board");
     if (board) |board_| {
