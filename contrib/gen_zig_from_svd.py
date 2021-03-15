@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import sys
-import io
 import subprocess
 import re
-
 from cmsis_svd.parser import SVDParser
+
 
 def cleanup_description(description):
     if description is None:
@@ -12,11 +11,14 @@ def cleanup_description(description):
 
     return ' '.join(description.replace('\n', ' ').split())
 
-# register names in from Nordic SVDs are using foo[n] for couple of registers
-# and also for somereaons there are %s in the reigster names
-name_regex = re.compile(r"\[([^\]]+)]")
+
 def cleanup_name(name):
+    # register names in from Nordic SVDs are using foo[n] for couple
+    # of registers and also for somereaons there are %s in the
+    # reigster names
+    name_regex = re.compile(r"\[([^\]]+)]")
     return name_regex.sub(r"_\1", name).replace("%", "_")
+
 
 class MMIOFileGenerator:
     def __init__(self, f):
@@ -109,7 +111,6 @@ class MMIOFileGenerator:
 
     def write_line(self, line):
         self.f.write(line + "\n")
-
 
 
 def main():
