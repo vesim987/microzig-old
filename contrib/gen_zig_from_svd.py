@@ -22,6 +22,32 @@ class MMIOFileGenerator:
     def __init__(self, f):
         self.f = f
 
+    def register_count(self, device):
+        count = 0
+        for peripheral in device.peripherals:
+            for register in peripheral.registers:
+                count += 1
+        return count
+
+    def generate_packed_struct_size_tests(self, device):
+        self.write_line("test \"register struct sizes\" {")
+        self.write_line("comptime {")
+
+        # We need to up our branch quota since we often go over the
+        # limit in a test this big.
+        branch_quota = self.register_count(device) * 1000
+        self.write_line(f"@setEvalBranchQuota({branch_quota});")
+
+        self.write_line("const expectEqual = @import(\"std\").testing.expectEqual;")
+        for peripheral in device.peripherals:
+            for register in sorted(peripheral.registers, key=lambda f: f.address_offset):
+                self.write_line("expectEqual({}, @bitSizeOf({}.{}.underlaying_type()));"
+                                .format(register.size,
+                                        peripheral.name,
+                                        cleanup_name(register.name)))
+        self.write_line("}")
+        self.write_line("}")
+
     def generate_padding(self, count):
         if count > 0:
             self.write_line(f"padding: u{count} = 0,")
@@ -78,6 +104,8 @@ class MMIOFileGenerator:
         self.write_line(f"const Name = \"{device.name}\";")
         for peripherial in device.peripherals:
             self.generate_peripherial_declaration(peripherial)
+
+        self.generate_packed_struct_size_tests(device)
 
     def write_line(self, line):
         self.f.write(line + "\n")
